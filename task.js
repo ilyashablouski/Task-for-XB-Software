@@ -128,7 +128,7 @@ function Map () { //конструктор объекта map
             }
           }
         }
-      }
+    }
 
     //Метод возврата имен штатов городов
     this.getNameOfStates = function (){
