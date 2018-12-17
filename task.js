@@ -111,10 +111,10 @@ function Map () { //конструктор объекта map
         let roundDistance = Math.round(distance * 100) / 100;
         deltaArr.push(roundDistance); //Записываем округленное значение в массив
 
-        return [nameOfCity, roundDistance]; //Возвращаем пару Город - значение расстояния в массив newTownCollection
+        return [nameOfCity, roundDistance]; //Возвращаем пару город - значение расстояния в массив newTownCollection
       })
 
-      //Переводим в радианы
+      //Перевод в радианы
       function deg2rad(deg) {
         return deg * (Math.PI/180) 
       }
@@ -124,7 +124,7 @@ function Map () { //конструктор объекта map
         for (let i = 0; i < newTownCollection.length; i++) {
           for (let j = 0; j < newTownCollection[i].length; j++){
             if (newTownCollection [i] [j] == minDistance) {
-              return newTownCollection [i] [j-1]; //Возвращаем имя города, которое соответствует минимальному значению расстояния
+              return newTownCollection [i] [j-1]; //Возвращаем имя ближайшего города
             }
           }
         }
