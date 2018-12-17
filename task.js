@@ -64,29 +64,71 @@ function Map () { //конструктор объекта map
         })
       }) 
     };
-    //Имя города, ближайщего к введенной широте и долготе
+    //Имя города, ближайщего к введенной широте и долготе (Теорема Пифагора)
     this.getNearestCity = function (lat, long) {
       let deltaArr = [];
       let newTownCollection = this.townCollection.map(function (item, key) {
-        var nameOfCity = map.townCollection[key].name;
+        let nameOfCity = map.townCollection[key].name;
         let difLat = lat - map.townCollection[key].lat;
         let difLong = long - map.townCollection[key].long;
-        let delta = Math.sqrt(Math.pow(difLat,2) + Math.pow(difLong,2)); //Теорема Пифагора, также можно и лучше использовать формулу Хаверсина
-        let roundDelta = Math.round(delta * 100) / 100;
-        deltaArr.push(roundDelta); //Записываем округленное значение в массив
-        return [nameOfCity, roundDelta]; //Возвращаем пару Город - значение округленной дельта в массив
+        let distance = Math.sqrt(Math.pow(difLat,2) + Math.pow(difLong,2)); //Теорема Пифагора, также можно и лучше использовать формулу Хаверсина
+        let roundDistance = Math.round(distance * 100) / 100;
+        deltaArr.push(roundDistance); //Записываем округленное значение в массив
+        return [nameOfCity, roundDistance]; //Возвращаем пару Город - значение округленной дельта в массив
       })
       
-        let minDelta = Math.min(...deltaArr); //Минимальное (ближайшее значение)
+        let minDistance = Math.min(...deltaArr); //Минимальное (ближайшее значение)
         
         for (let i = 0; i < newTownCollection.length; i++) {
           for (let j = 0; j < newTownCollection[i].length; j++){
-            if (newTownCollection [i] [j] == minDelta) {
+            if (newTownCollection [i] [j] == minDistance) {
               return newTownCollection [i] [j-1]; //Возвращаем имя города, которое соответствует минимальному значению расстояния
             }
           }
         }
     }
+
+    //Имя города, ближайщего к введенной широте и долготе (формула Хаверсина)
+    this.getNearestCityHav = function (lat, long) {
+      let deltaArr = []; //Массив расстояний в km
+      let newTownCollection = this.townCollection.map(function (item, key) {
+        let nameOfCity = map.townCollection[key].name;
+        let lat1 = map.townCollection[key].lat;
+        let long1 = map.townCollection[key].long;
+        let lat2 = lat;
+        let long2 = long;
+        //Расчет по формуле Хаверсина
+        let R = 6371; // Radius of the earth in km
+        let dLat = deg2rad(lat2-lat1);  // deg2rad below
+        let dLon = deg2rad(long2-long1); 
+        let a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2); 
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        let distance = R * c; // Distance in km
+
+        let roundDistance = Math.round(distance * 100) / 100;
+        deltaArr.push(roundDistance); //Записываем округленное значение в массив
+
+        return [nameOfCity, roundDistance]; //Возвращаем пару Город - значение расстояния в массив newTownCollection
+      })
+
+      //Переводим в радианы
+      function deg2rad(deg) {
+        return deg * (Math.PI/180) 
+      }
+
+        let minDistance = Math.min(...deltaArr); //Минимальное (ближайшее значение)
+        
+        for (let i = 0; i < newTownCollection.length; i++) {
+          for (let j = 0; j < newTownCollection[i].length; j++){
+            if (newTownCollection [i] [j] == minDistance) {
+              return newTownCollection [i] [j-1]; //Возвращаем имя города, которое соответствует минимальному значению расстояния
+            }
+          }
+        }
+      }
 
     //Метод возврата имен штатов городов
     this.getNameOfStates = function (){
@@ -117,7 +159,8 @@ map.getMostNorthTown();
 map.getMostSouthTown();
 map.getMostWestTown();
 map.getMostEastTown();
-console.log("Имя города, ближайщего к введенной широте и долготе: " + map.getNearestCity(37.70, -103.90));
+console.log("Имя города, ближайщего к введенной широте и долготе (ф-ла Пифагора): " + map.getNearestCity(37.70, -103.90));
+console.log("Имя города, ближайщего к введенной широте и долготе (ф-ла Хаверсина): " + map.getNearestCityHav(37.70, -103.90));
 map.getNameOfStates();
 
 
