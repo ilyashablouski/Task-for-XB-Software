@@ -21,7 +21,7 @@ class Town { //конструктор св-в объектов
 
 for (i = 0; i < mapData.length; i++) {
   let j = 0;
-  let town = new Town(mapData[i][j], mapData[i][j + 1], mapData[i][j + 2], mapData[i][j + 3]);
+  const town = new Town(mapData[i][j], mapData[i][j + 1], mapData[i][j + 2], mapData[i][j + 3]);
   townCollection.push(town);
 }
 
@@ -139,7 +139,7 @@ class Map extends Town { //класс объекта map
   //Метод возврата имен штатов городов
   getNameOfStates() {
     let statesName = [];
-    let propName = "state";
+    const propName = "state";
     townCollection.forEach((item, key) => {
       statesName.push(townCollection[key][propName]);
     });
